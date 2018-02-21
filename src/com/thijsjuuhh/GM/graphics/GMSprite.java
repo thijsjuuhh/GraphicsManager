@@ -21,6 +21,12 @@ public class GMSprite {
 		load();
 	}
 
+	private GMSprite(int[] pixels) {
+		this.pixels = new int[pixels.length];
+		for (int i = 0; i < pixels.length; i++)
+			this.pixels[i] = pixels[i];
+	}
+
 	public GMSprite(BufferedImage img) {
 		width = img.getWidth();
 		height = img.getHeight();
@@ -47,6 +53,12 @@ public class GMSprite {
 
 	}
 
+	public GMSprite(int width, int height, int pixels[]) {
+		this.width = width;
+		this.height = height;
+		this.pixels = pixels;
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -56,12 +68,17 @@ public class GMSprite {
 	}
 
 	public GMSprite replaceColor(int colorToReplace, int color) {
-		for (int pix = 0; pix < pixels.length; pix++)
-			if (pixels[pix] == colorToReplace) {
-				pixels[pix] = color;
-			} else {
+		GMSprite result = new GMSprite(pixels);
+
+		result.width = width;
+		result.height = height;
+
+		for (int pix = 0; pix < result.pixels.length; pix++)
+			if (result.pixels[pix] == colorToReplace) {
+				result.pixels[pix] = color;
 			}
-		return this;
+
+		return result;
 
 	}
 
@@ -89,4 +106,24 @@ public class GMSprite {
 
 	}
 
+	public static GMSprite[] replaceColors(int colorToReplace, int colorToReplaceTo, GMSprite... s) {
+		GMSprite[] res = new GMSprite[s.length];
+		for (int sprite = 0; sprite < res.length; sprite++)
+			res[sprite] = s[sprite].replaceColor(colorToReplace, colorToReplaceTo);
+		return res;
+	}
+
+	public static GMSprite[] replaceColors(int[] colorToReplace, int[] colorToReplaceTo, GMSprite... s) {
+		int length = colorToReplace.length;
+
+		GMSprite[] result = s;
+
+		if (colorToReplace.length < colorToReplaceTo.length)
+			length = colorToReplace.length;
+
+		for (int sprite = 0; sprite < length; sprite++)
+			result = replaceColors(colorToReplace[sprite], colorToReplaceTo[sprite], result);
+
+		return result;
+	}
 }
