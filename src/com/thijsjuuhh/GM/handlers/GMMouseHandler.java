@@ -57,6 +57,12 @@ public class GMMouseHandler extends MouseAdapter {
 		mouseY = e.getY();
 	}
 
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		mouseX = e.getX();
+		mouseY = e.getY();
+	}
+
 	public int getMouseX() {
 		return mouseX;
 	}
@@ -80,6 +86,5 @@ public class GMMouseHandler extends MouseAdapter {
 	public boolean isInside() {
 		return inside;
 	}
-
 
 }

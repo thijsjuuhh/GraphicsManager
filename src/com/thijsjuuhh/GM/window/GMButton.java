@@ -4,7 +4,6 @@ import com.thijsjuuhh.GM.graphics.GMSprite;
 import com.thijsjuuhh.GM.graphics.GMSpriteSheet;
 import com.thijsjuuhh.GM.graphics.Render2D;
 import com.thijsjuuhh.GM.handlers.GMButtonHandler;
-import com.thijsjuuhh.GM.handlers.GMMouseHandler;
 
 public class GMButton extends GMComponent {
 
@@ -13,15 +12,12 @@ public class GMButton extends GMComponent {
 			new GMSprite(0, 0, 50, 50, DEF).flipHorizontal() };
 
 	// private String text;
-	private GMMouseHandler m;
 	private GMButtonHandler handler;
 	private GMSprite[] s;
 
-	private boolean buttonInside = false;
+	private boolean pressed = false;
 
-	public GMButton(int x, int y, int width, int height, String name) {
-		super(x, y, width, height, name);
-	}
+	private boolean buttonInside = false;
 
 	public GMButton(int x, int y, String name, GMSprite... s) {
 		super(x, y, s.length * s[0].getWidth(), s[0].getHeight(), name);
@@ -37,17 +33,33 @@ public class GMButton extends GMComponent {
 
 	@Override
 	public void update() {
-		if (m != null) {
-			if (isInside(m.getMouseX(), m.getMouseY())) {
+		if (mouse_handler != null) {
+			if (isInside(mouse_handler.getMouseX(), mouse_handler.getMouseY())) {
 				handler.buttonInside();
 
 				if (!buttonInside) {
 					buttonInside = true;
 					handler.buttonEntered();
 				}
-				
-				if(m.leftMousePressed())
+
+				if (mouse_handler.leftMousePressed()) {
+					if (!pressed) {
+						pressed = true;
+					}
 					handler.buttonPressed();
+				} else {
+					if (pressed) {
+						pressed = false;
+						handler.buttonClicked();
+					}
+					handler.buttonReleased();
+				}
+			} else {
+				if (buttonInside) {
+					buttonInside = false;
+					handler.buttonLeft();
+				}
+				pressed = false;
 			}
 		}
 	}
@@ -61,15 +73,15 @@ public class GMButton extends GMComponent {
 
 	public GMButton scale(int nw, int nh) {
 		for (int i = 0; i < s.length; i++)
-			s[i] = s[i].scale(nw / s.length, nh / s.length);
-		width = nw / s.length;
+			s[i] = s[i].scale(nw / s.length, nh);
+		width = nw;
 		height = nh;
 
 		return this;
 	}
 
-	public GMButton addMouseHandler(GMMouseHandler m) {
-		this.m = m;
+	public GMButton addButtonHandler(GMButtonHandler handler) {
+		this.handler = handler;
 		return this;
 	}
 

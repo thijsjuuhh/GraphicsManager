@@ -1,11 +1,13 @@
 package com.thijsjuuhh.GM.window;
 
 import com.thijsjuuhh.GM.graphics.Render;
+import com.thijsjuuhh.GM.handlers.GMMouseHandler;
 
 public abstract class GMComponent implements Render, Update {
 
 	protected int x, y, width, height;
 	protected String name;
+	protected GMMouseHandler mouse_handler;
 
 	public GMComponent(int x, int y, int width, int height, String name) {
 		this.name = name;
@@ -47,6 +49,10 @@ public abstract class GMComponent implements Render, Update {
 
 	public boolean isInside(int x, int y) {
 		return (x > this.x && x < this.x + width && y > this.y && y < this.y + height);
+	}
+
+	public void addMouseHandler(GMMouseHandler mouse_handler) {
+		this.mouse_handler = mouse_handler;
 	}
 
 }

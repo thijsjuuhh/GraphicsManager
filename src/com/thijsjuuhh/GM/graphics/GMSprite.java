@@ -40,7 +40,7 @@ public class GMSprite {
 
 		BufferedImage resized = new BufferedImage(nw, nh, BufferedImage.TYPE_INT_RGB);
 		Graphics g = resized.getGraphics();
-		g.drawImage(img.getScaledInstance(nh, nw, Image.SCALE_REPLICATE), 0, 0, nw, nh, null);
+		g.drawImage(img.getScaledInstance(nh, nw, Image.SCALE_SMOOTH), 0, 0, nw, nh, null);
 		g.dispose();
 
 		return new GMSprite(resized);

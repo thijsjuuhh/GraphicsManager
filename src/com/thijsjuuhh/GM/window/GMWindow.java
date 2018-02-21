@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import com.thijsjuuhh.GM.graphics.Render2D;
+import com.thijsjuuhh.GM.handlers.GMMouseHandler;
 
 public class GMWindow implements Runnable {
 
@@ -29,6 +30,8 @@ public class GMWindow implements Runnable {
 	private GMPanel panel = new GMPanel();
 	private LinkedList<GMPanel> panels;
 	private boolean running;
+
+	private GMMouseHandler mouse_handler;
 
 	public GMWindow(int width, int height, String title, boolean useGMLibrary) {
 		w = width;
@@ -58,6 +61,10 @@ public class GMWindow implements Runnable {
 		panels = new LinkedList<GMPanel>();
 		panels.add(panel);
 
+		mouse_handler = new GMMouseHandler();
+		frame.addMouseListener(mouse_handler);
+		frame.addMouseMotionListener(mouse_handler);
+		panel.addMouseHandler(mouse_handler);
 	}
 
 	public Thread createThread(String threadName) {
@@ -98,6 +105,11 @@ public class GMWindow implements Runnable {
 		return this;
 	}
 
+	public void update() {
+		for (GMPanel panel : panels)
+			panel.update();
+	}
+
 	public void render() {
 		BufferStrategy bs = frame.getBufferStrategy();
 		if (bs == null) {
@@ -122,6 +134,7 @@ public class GMWindow implements Runnable {
 	public void run() {
 		while (running) {
 			render();
+			update();
 		}
 	}
 
